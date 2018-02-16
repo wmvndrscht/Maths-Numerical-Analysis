@@ -10,8 +10,11 @@ h  = 0.00001;
 
 %Vin is a function in terms of t
 Vin = @(t) 2.5*heaviside(t);
-func = @(t,q) (1/r)*(Vin(t) - q/C );
+func = @(t,q) (1/R)*(Vin(t) - q/C );
 
 [Vout, t] = RK2(qc0,h,tf,func);
 figure;
 plot(t,Vout);
+
+
+%
