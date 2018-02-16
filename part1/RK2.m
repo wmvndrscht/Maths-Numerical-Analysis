@@ -2,11 +2,11 @@ function [Vout, t] = RK2(qc0,h,tf,func)
     
     ti = 0;
     N = round((tf-ti)/h);
-    t=ti:h:tf;
+    t=ti:h:(tf);
     q = zeros(1,N);
     q(1) = qc0;
     
-    for j=1:N-1 
+    for j=1:N
         qp = q(j) + h*func(t(j),q(j));
         k1 = func(t(j),q(j));
         k2 = func(t(j)+h,qp);
@@ -15,6 +15,8 @@ function [Vout, t] = RK2(qc0,h,tf,func)
         q(j+1) = q(j) + h*qave;
 %         q(j+1) = q(j) + h*k2; %midpoint meth
     end
+    
+    Vout = q;
 
 
 end
