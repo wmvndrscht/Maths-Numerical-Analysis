@@ -1,10 +1,15 @@
-function [Vout, t] = RK2(qc0,h,tf,func)
+function [Vout, t] = RK2(q0,h,tf,func,Vin,R,C);
+
+    
     
     ti = 0;
     N = round((tf-ti)/h);
     t=ti:h:tf;
     q = zeros(1,N);
-    q(1) = qc0;
+    q(1) = q0;
+
+    func = @(t,q) (1/R)*(Vin(t) - q/C );
+    
     
     for j=1:N
         k1 = func(t(j),q(j));
@@ -18,8 +23,8 @@ function [Vout, t] = RK2(qc0,h,tf,func)
         q(j+1) = q(j) + 0.25*h*(k1 + 3*k2); %ralston
     end
     
-    Vout = q;
-
+    Vout = q./C;
 
 end
+
 
