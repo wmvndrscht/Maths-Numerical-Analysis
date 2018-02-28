@@ -1,4 +1,4 @@
-function [Vout, t] = RK2(q0,h,tf,func,Vin,R,C);
+function [Vout, t] = RK2(q0,h,tf,func,Vin,R,C,method);
 
     
     
@@ -12,19 +12,23 @@ function [Vout, t] = RK2(q0,h,tf,func,Vin,R,C);
     
     
     for j=1:N
+        
         k1 = func(t(j),q(j));
-        %qp = q(j) + h*k1;
-        %k2 = func(t(j)+h,qp); %heun
-        %k2 = func(t(j)+0.5*h,q(j)+h*0.5*k1); %midpoint
-        k2 = func(t(j) + 2*h/3, q(j) + 2*h*k1/3); %ralston
-        %qave = 0.5*(k1+k2); %heun
-        %q(j+1) = q(j) + h*qave; %heun
-        %q(j+1) = q(j) + h*k2; %midpoint
-        q(j+1) = q(j) + 0.25*h*(k1 + 3*k2); %ralston
+        
+        if(method == "heun")
+            qp = q(j) + h*k1; %heun
+            k2 = func(t(j)+h,qp); %heun
+            qave = 0.5*(k1+k2); %heun
+            q(j+1) = q(j) + h*qave; %heun
+        elseif(method == "midpoint")
+            k2 = func(t(j)+0.5*h,q(j)+h*0.5*k1); %midpoint
+            q(j+1) = q(j) + h*k2; %midpoint
+        else
+            k2 = func(t(j) + 2*h/3, q(j) + 2*h*k1/3); %ralston
+            q(j+1) = q(j) + 0.25*h*(k1 + 3*k2); %ralston
+        end
+
     end
-    
     Vout = q./C;
 
 end
-
-
