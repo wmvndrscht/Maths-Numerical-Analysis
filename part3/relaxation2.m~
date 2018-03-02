@@ -10,13 +10,7 @@ h=1/x; %gridsize
 %residual size
 ep = 0.001;
 
-%??how to get k
-for i=1:x+1
-    for j=1:y+1
-        u(i,j)=0;
-    end
-end
-
+k=
 %u(0,y)=y-1;
 %u(1,y)=3y;
 for i=1:y+1
