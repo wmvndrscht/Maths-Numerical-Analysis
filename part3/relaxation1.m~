@@ -1,0 +1,47 @@
+clear;
+%total numbers
+x=100;
+y=100;
+h=1/x; %gridsize
+k=(0.6*N)/(4*N-4); %average of all values of known boundary points
+ep=0.15; %residual size
+
+%initially set all values to k
+for i=1:x+1
+    for j=1:y+1
+        u(i,j)=k;
+    end
+end
+
+%boundary conditions
+for i=1:y+1
+    u(1,i)=0;
+    u(N+1,i)=0;
+    u(i,N+1)=0;
+    u(i,1)=0;
+end
+
+for i=0.2*(x+1):0.8*(x+1)
+    u(i,0)=1;
+end
+
+cnt=x*y;
+while i=1:cnt
+     for n = 2:N
+        for m = 2:N
+            unew(m,n) = (u(m+1, n)+u(m-1, n)+u(m, n+1)+u(m, n-1)-4*u(m, n))/4;
+            r = abs(unew(m, n)-u(m, n));
+            if r<ep
+                cnt++;
+            end
+        end
+        
+
+
+
+
+
+
+
+
+
