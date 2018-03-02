@@ -6,15 +6,16 @@
 % u(x; 0) = 1 ; for 0:2 < x < 0:8:
 clear;
 k = 3/16; %initial value of all P
-ep = 0.15; %residual size parameter
+ep = 0.14; %residual size parameter
 num = 9;  %number of unknowns
-uold = [0 1 1 1 0;
+uold = [0 0 0 0 0;
      0 k k k 0;
      0 k k k 0;
      0 k k k 0;
-     0 0 0 0 0];
+     0 1 1 1 0];
+      
  unew = uold;
- cnt=0
+ cnt=0;
 while cnt<9 
     cnt = 0; 
     for n = 2:1:4
