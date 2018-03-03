@@ -4,14 +4,14 @@ function [Vout, t] = RK2(q0,h,tf,func,Vin,R,C,method);
     
     ti = 0;
     N = round((tf-ti)/h);
-    t=ti:h:tf;
+    t=ti:h:tf-h;
     q = zeros(1,N);
     q(1) = q0;
 
     func = @(t,q) (1/R)*(Vin(t) - q/C );
     
     
-    for j=1:N
+    for j=1:N-1
         
         k1 = func(t(j),q(j));
         
@@ -32,3 +32,4 @@ function [Vout, t] = RK2(q0,h,tf,func,Vin,R,C,method);
     Vout = q./C;
 
 end
+
