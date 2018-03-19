@@ -9,9 +9,7 @@ h=1/x; %gridsize
 g(100,100)=2;
 %residual size
 ep = 0.001;
-%omega(used in successive over relaxation to weight residual term)
-w = 1.9;
-
+ 
 %set k to a small number
 for i=1:x+1
     for j=1:y+1
@@ -32,15 +30,14 @@ for i=1:x+1
     u(i,1)=(h*(i-1))^2-1;
     u(i,y+1)=(h*(i-1))^2+2*(i-1)*h;
 end
-
+ 
 cnt=x*y;
 for i=1:cnt
     cnt=0;
      for n = 2:x
         for m = 2:y
-            
             r=(u(m+1, n)+u(m-1, n)+u(m, n+1)+u(m, n-1)-4*u(m, n)-g(m,n)*h^2)/4;
-            u(m,n) = u(m,n)+w*r;
+            u(m,n) = u(m,n)+r;
             if r<ep
                 cnt=cnt+1;
             end
