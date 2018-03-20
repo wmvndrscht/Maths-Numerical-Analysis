@@ -11,7 +11,7 @@ qCi = 500*10^(-9);
 dqCi = 0;
 
 ti = 0; %start time = 0;
-tf = 0.02; %end time = 0.05;
+tf = 0.02; %end time -> adapt according to in/out voltage for better display
 h = 10^(-6); %small interval chosen
 
 %initialize empty arrays
