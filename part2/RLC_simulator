@@ -2,22 +2,23 @@ close all;
 clear variables;
 clc;
 
-%initializing values
+%initializing values (from given values)
 R = 250;
-C = 3.5e-6;
-L = 600e-3;
-
-h = 10e-5;
-ti = 0; %start time = 0;
-tf = 0.5; %end time = 0.05;
-N = round((tf-ti)/h);
-qCi = 500e-9; 
+C = 3.5*10^(-6);
+L = 600*10^(-3);
+qCi = 500*10^(-9); 
 dqCi = 0;
 
-qC = zeros(1, N);
-dqC = zeros(1, N);
-t = zeros(1, N);
-Vout = zeros(1, N);
+ti = 0; %start time = 0;
+tf = 0.02; %end time = 0.05;
+h = 10^(-6); %small interval chosen
+
+%initialize empty arrays
+N = round(tf/h);
+Vin = zeros(1,N);
+T = zeros(1,N);
+
+%test inputs
 Vin1 = @(t) (5);
 Vin2 = @(t) (5*exp((-t^2)/(3e-6)));
 Vin3 = @(t) (5*square(2*pi*5*t));
@@ -27,37 +28,28 @@ Vin6 = @(t) (5*sin(2*pi*5*t));
 Vin7 = @(t) (5*sin(2*pi*109*t));
 Vin8 = @(t) (5*sin(2*pi*500*t));
 
-t(1) = ti;
-qC(1) = qCi;
-dqC(1) = dqCi;
 
-f1 = @(t, q, dq) (dq);
-f2 = @(t, q, dq) ((feval(Vin1, t) - (q/C) - R*dq)/L);
-
-for j=1:N-1
-        [dqC(j+1), qC(j+1)] = RK_4th(t(j), qC(j), dqC(j), f1, f2, h);
-        Vout(j) = R*dqC(j);
-        t(j+1) = t(j) + h;
+for j = 1:N-1
+    Vin(j) = feval(Vin1, T(j)); %change Vin1:8 to tets all inputs 
+    T(j+1) = T(j) + h;
 end
-Vout(N) = R*dqC(N);
 
-plot(t, Vout);
+f1 = @(t, qC, dqC) dqC;
+f2 =@(t, qC, dqC) (Vin1(t)-R*dqC-qC/C)/L; %change vin1:8 here as well
 
-%ylim([-2,2]);
-xlabel('time(seconds)');
-ylabel('Vout(volts)');
-legend('RK_4th method')
-title('Plot of Vout vs Time using RK_4th method')
+%run rk4th
+[t_out, qC_out, dqC_out] = RK_4th(f1, f2, ti, qCi, dqCi, tf, h);
 
-grid on;
+
+%plot
+figure(1); clf(1)
+dqC_out = dqC_out * R;
+plot(t_out, dqC_out, 'b')
 hold on;
-
-Vin = zeros(1, N);
-
-for i=1:N
-    Vin(i) = feval(Vin4, t(i));
-end
-
-plot(t, Vin);
-
-legend('output', 'input');
+grid on;
+plot(t_out, Vin, 'r');
+xlabel('Time(s)')
+title('Exercise 3: RLC Circuit');
+ylabel('Voltage(V)')
+set(gca, 'fontsize', 16);
+legend('Output Signal Capacitor(V)', 'Input Signal (V)', 'location', 'northeast');
