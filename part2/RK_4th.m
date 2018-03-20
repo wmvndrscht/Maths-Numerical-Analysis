@@ -1,18 +1,26 @@
-function[next_dq, next_q] = RK_4th(t, q, dq, f1, f2, h)
+function[x, y, z] = RK_4th(f1, f2, xi, yi, zi, tf, h)
 
-% compute q and y(dq) for all t; dq -> vout and q->dq
-%y(i) = dq(i)
-% => y'(i) = f(t(i), y(i), q(i))#
+N = round(tf/h);
+x = zeros(1,N);
+y = zeros(1,N);
+z = zeros(1,N);
 
-k1 = feval(f1, t, q, dq);
-m1 = feval(f2, t, q, dq);
-k2 = feval(f1, t + (1/2)*h, q + (1/2)*k1*h, dq + (1/2)*m1*h);
-m2 = feval(f2, t + (1/2)*h, q + (1/2)*k1*h, dq + (1/2)*m1*h);
-k3 = feval(f1, t + (1/2)*h, q + (1/2)*k2*h, dq + (1/2)*k2*h);
-m3 = feval(f2, t + (1/2)*h, q + (1/2)*m2*h, dq + (1/2)*m2*h);
-k4 = feval(f1, t + h, q + k3*h, dq + m3*h);
-m4 = feval(f2, t + h, q + k3*h, dq + m3*h);
-next_q = q + h*((1/6)*(k1 + 2*k2 + 2*k3 + k4));
-next_dq = dq + h*((1/6)*(m1 + 2*m2 + 2*m3 + m4));
+x(1) = xi;
+y(1) = yi;
+z(1) = zi;
+for i=1:N-1
+    
+    k1 = feval(f1 ,x(i), y(i), z(i));
+    m1 = feval(f2, x(i), y(i), z(i));
+    k2 = feval(f1, x(i) + h/2, y(i) + h/2*k1, z(i) + h/2*m1);
+    m2 = feval(f2, x(i) + h/2, y(i) + h/2*k1, z(i) + h/2*m1);
+    k3 = feval(f1, x(i) + h/2, y(i) + h/2*k2, z(i) + h/2*m2);
+    m3 = feval(f2, x(i) + h/2, y(i) + h/2*k2, z(i) + h/2*m2);
+    k4 = feval(f1, x(i) + h, y(i) + h*k3, z(i)+ h*m3);
+    m4 = feval(f2, x(i) + h, y(i) + h*k3, z(i)+ h*m3);
+    y(i+1)= y(i) + h/6 * (k1 + 2*k2 + 2*k3 + k4);
+    z(i+1)= z(i) + h/6 * (m1 + 2*m2 + 2*m3 + m4);
+    x(i+1) = x(i) + h;
 
+end
 end
