@@ -1,20 +1,13 @@
-function [Vout, t] = RK2(q0,h,tf,func,Vin,R,C,method);
+function [q, t] = RK2(q0,h,tf,func,method)  
 
-    
-    
-    ti = 0;
-    N = round((tf-ti)/h);
-    t=ti:h:tf-h;
-    q = zeros(1,N);
-    q(1) = q0;
-
-    func = @(t,q) (1/R)*(Vin(t) - q/C );
-    
+    ti = 0;                 %initial time
+    N = round((tf-ti)/h);   %N = number of steps
+    t=ti:h:tf-h;            %range of t values
+    q = zeros(1,N);         %initialise q array
+    q(1) = q0;              %set initial q value
     
     for j=1:N-1
-        
         k1 = func(t(j),q(j));
-        
         if(method == "heun")
             qp = q(j) + h*k1; %heun
             k2 = func(t(j)+h,qp); %heun
@@ -27,9 +20,7 @@ function [Vout, t] = RK2(q0,h,tf,func,Vin,R,C,method);
             k2 = func(t(j) + 2*h/3, q(j) + 2*h*k1/3); %ralston
             q(j+1) = q(j) + 0.25*h*(k1 + 3*k2); %ralston
         end
-
     end
-    Vout = q./C;
 
 end
 
